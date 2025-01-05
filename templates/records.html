@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıtlar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+        
+        .back-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .records-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .course-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .course-item {
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .course-header {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .week-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .week-item {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .week-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background: #f0f2ff;
+        }
+        
+        .week-link {
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+        
+        .week-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .record-count {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-button">← Ana Sayfa</a>
+        
+        <h1>Yoklama Kayıtları</h1>
+        
+        <div class="records-container">
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% else %}
+                <div class="course-list">
+                    {% for ders in dersler %}
+                        <div class="course-item">
+                            <div class="course-header">{{ ders.ders_adi }}</div>
+                            <div class="week-list">
+                                {% for hafta in ders.haftalar %}
+                                    <a href="{{ url_for('view_records', ders_id=ders.id, hafta_id=hafta.hafta_id) }}" class="week-link">
+                                        <div class="week-item">
+                                            <div class="week-title">{{ hafta.hafta_no }}. Hafta</div>
+                                            <div class="record-count">{{ hafta.kayit_sayisi }} Kayıt</div>
+                                        </div>
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ bolum.bolum_adi }} - Dersler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+        
+        .back-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .add-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            margin-left: 10px;
+            transition: transform 0.2s;
+        }
+        
+        .add-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .ders-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 10px 0;
+        }
+        
+        .ders-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.2s;
+        }
+        
+        .ders-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ders-adi {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .ders-info {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            text-align: center;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .breadcrumb {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="{{ url_for('list_bolumler') }}">Bölümler</a> →
+            {{ bolum.bolum_adi }}
+        </div>
+        
+        <a href="{{ url_for('list_bolumler') }}" class="back-button">← Bölümler</a>
+        <a href="{{ url_for('ders_ekle', bolum_id=bolum.id) }}" class="add-button">+ Ders Ekle</a>
+        
+        <h1>{{ bolum.bolum_adi }} - Dersler</h1>
+        
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        <div class="ders-list">
+            {% for ders in dersler %}
+            <a href="{{ url_for('list_haftalar', ders_id=ders.id) }}" class="ders-card">
+                <div class="ders-adi">{{ ders.ders_adi }}</div>
+                <div class="ders-info">
+                    Hafta Sayısı: {{ ders.hafta_sayisi }}<br>
+                    Oluşturulma: {{ ders.olusturma_tarihi.strftime('%d.%m.%Y %H:%M') }}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html> 
