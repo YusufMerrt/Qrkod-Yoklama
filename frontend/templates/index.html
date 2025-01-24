@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yoklama Sistemi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Yoklama Sistemi</h1>
+        </div>
+
+        <div class="list-container">
+            <div class="list-item">
+                <div class="item-info">
+                    <h3>Bölüm ve Ders Yönetimi</h3>
+                    <p>Bölüm ve ders ekleyip düzenleyebilirsiniz.</p>
+                </div>
+                <div class="item-actions">
+                    <a href="{{ url_for('list_bolumler') }}" class="action-button">Bölümleri Görüntüle</a>
+                </div>
+            </div>
+
+            <div class="list-item">
+                <div class="item-info">
+                    <h3>QR Kod Oluşturma</h3>
+                    <p>Dersler için yoklama QR kodu oluşturabilirsiniz.</p>
+                </div>
+                <div class="item-actions">
+                    <a href="{{ url_for('qr_generator') }}" class="action-button">QR Kod Oluştur</a>
+                </div>
+            </div>
+
+            <div class="list-item">
+                <div class="item-info">
+                    <h3>Yoklama Kayıtları</h3>
+                    <p>Tüm yoklama kayıtlarını görüntüleyebilirsiniz.</p>
+                </div>
+                <div class="item-actions">
+                    <a href="{{ url_for('list_kayitlar') }}" class="action-button">Kayıtları Görüntüle</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Kod Oluşturucu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-button">← Ana Sayfa</a>
+        <h1>QR Kod Oluşturucu</h1>
+
+        {% if not qr_code %}
+        <div class="form-container">
+            <form method="POST" action="{{ url_for('generate') }}">
+                <div class="form-group">
+                    <label for="bolum">Bölüm</label>
+                    <select id="bolum" name="bolum" required onchange="getBolumDersleri(this.value)">
+                        <option value="">Bölüm Seçin</option>
+                        {% for bolum in bolumler %}
+                            <option value="{{ bolum.id }}">{{ bolum.bolum_adi }} ({{ bolum.ders_sayisi }} Ders)</option>
+                        {% endfor %}
+                    </select>
+                    <div class="info-text">Bölüm seçerek başlayın</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ders">Ders</label>
+                    <select id="ders" name="ders" required disabled onchange="getDersHaftalari(this.value)">
+                        <option value="">Önce Bölüm Seçin</option>
+                    </select>
+                    <div class="info-text">Bölüm seçtikten sonra dersi seçin</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="hafta">Hafta</label>
+                    <select id="hafta" name="hafta" required disabled>
+                        <option value="">Önce Ders Seçin</option>
+                    </select>
+                    <div class="info-text">Ders seçtikten sonra haftayı seçin</div>
+                </div>
+                
+                <button type="submit" class="submit-button">QR Kod Oluştur</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="qr-container">
+            <div class="qr-code">
+                <img id="qr-image" src="data:image/png;base64,{{ qr_code }}" alt="QR Kod">
+                <div class="countdown-container">
+                    <p>QR kod <span id="countdown">15</span> saniye sonra yenilenecek</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-container">
+            <h2>Seçili Ders Bilgileri:</h2>
+            <p><strong>Bölüm:</strong> {{ bolum_adi }}</p>
+            <p><strong>Ders:</strong> {{ ders_adi }}</p>
+            <p><strong>Hafta:</strong> {{ hafta_no }}. Hafta</p>
+            <p><strong>Tarih:</strong> {{ tarih }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function getBolumDersleri(bolumId) {
+            fetch(`/get-dersler/${bolumId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const dersSelect = document.getElementById('ders');
+                    dersSelect.innerHTML = '<option value="">Ders Seçin</option>';
+                    data.forEach(ders => {
+                        dersSelect.innerHTML += `<option value="${ders.id}">${ders.ders_adi} (${ders.hafta_sayisi} Hafta)</option>`;
+                    });
+                    dersSelect.disabled = false;
+                    
+                    // Ders seçimi sıfırlandığında hafta seçimini de sıfırla
+                    const haftaSelect = document.getElementById('hafta');
+                    haftaSelect.innerHTML = '<option value="">Önce Ders Seçin</option>';
+                    haftaSelect.disabled = true;
+                });
+        }
+        
+        function getDersHaftalari(dersId) {
+            fetch(`/get-haftalar/${dersId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const haftaSelect = document.getElementById('hafta');
+                    haftaSelect.innerHTML = '<option value="">Hafta Seçin</option>';
+                    data.forEach(hafta => {
+                        haftaSelect.innerHTML += `<option value="${hafta.hafta_no}">${hafta.hafta_no}. Hafta (${hafta.kayit_sayisi} Kayıt)</option>`;
+                    });
+                    haftaSelect.disabled = false;
+                });
+        }
+
+        function updateQRCode() {
+            fetch(window.location.href)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newQRCode = doc.querySelector('#qr-image').src;
+                    document.querySelector('#qr-image').src = newQRCode;
+                });
+        }
+
+        function updateCountdown(seconds) {
+            const countdownElement = document.getElementById('countdown');
+            countdownElement.textContent = seconds;
+            
+            if (seconds > 0) {
+                setTimeout(() => updateCountdown(seconds - 1), 1000);
+            } else {
+                updateQRCode();
+                updateCountdown(15);
+            }
+        }
+
+        // QR kod varsa geri sayımı başlat
+        const qrImage = document.getElementById('qr-image');
+        if (qrImage) {
+            updateCountdown(15);
+        }
+    </script>
+</body>
+</html> 

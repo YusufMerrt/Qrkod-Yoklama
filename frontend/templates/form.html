@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yoklama Formu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2>{{ ders.bolum_adi }}</h2>
+            <h3>{{ ders.ders_adi }} - Hafta {{ hafta_no }}</h3>
+            
+            {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+            {% endif %}
+            
+            <form action="{{ url_for('submit_form') }}" method="POST">
+                <input type="hidden" name="ders_id" value="{{ ders.id }}">
+                <input type="hidden" name="hafta_no" value="{{ hafta_no }}">
+                <input type="hidden" name="qr_kod_id" value="{{ qr_kod_id }}">
+                <input type="hidden" name="olusturma_zamani" value="{{ olusturma_zamani }}">
+                
+                <div class="form-group">
+                    <label for="name">Ad:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="surname">Soyad:</label>
+                    <input type="text" id="surname" name="surname" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="student_id">Öğrenci No:</label>
+                    <input type="text" id="student_id" name="student_id" pattern="\d{11}" title="Öğrenci numarası 11 haneli olmalıdır" required>
+                </div>
+                
+                <button type="submit">Yoklamayı Kaydet</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html> 

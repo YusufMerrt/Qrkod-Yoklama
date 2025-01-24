@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yeni Ders Ekle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Yeni Ders Ekle</h1>
+        </div>
+
+        <div class="form-container">
+            {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form action="{{ url_for('ders_ekle', bolum_id=bolum_id) }}" method="POST">
+                <div class="form-group">
+                    <label for="ders_adi">Ders Adı:</label>
+                    <input type="text" id="ders_adi" name="ders_adi" required>
+                </div>
+                
+                <button type="submit">Ders Ekle</button>
+            </form>
+        </div>
+
+        <div class="footer">
+            <a href="{{ url_for('list_dersler', bolum_id=bolum_id) }}" class="back-button">Derslere Dön</a>
+        </div>
+    </div>
+</body>
+</html> 

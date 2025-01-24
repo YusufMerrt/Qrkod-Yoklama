@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bölümler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Bölümler</h1>
+            <a href="{{ url_for('bolum_ekle') }}" class="add-button">Yeni Bölüm Ekle</a>
+        </div>
+
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="list-container">
+            {% if bolumler %}
+                {% for bolum in bolumler %}
+                <div class="list-item">
+                    <div class="item-info">
+                        <h3>{{ bolum.bolum_adi }}</h3>
+                        <p>Ders Sayısı: {{ bolum.ders_sayisi }}</p>
+                    </div>
+                    <div class="item-actions">
+                        <a href="{{ url_for('list_dersler', bolum_id=bolum.id) }}" class="action-button">Dersleri Görüntüle</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-data">
+                    Henüz bölüm bulunmamaktadır.
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="footer">
+            <a href="{{ url_for('home') }}" class="back-button">Ana Sayfaya Dön</a>
+        </div>
+    </div>
+</body>
+</html> 

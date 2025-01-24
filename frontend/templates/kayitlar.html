@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yoklama Kayıtları</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Yoklama Kayıtları</h1>
+        </div>
+        
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        <div class="filter-container">
+            <form action="{{ url_for('list_kayitlar') }}" method="GET" class="filter-form">
+                <div class="form-group">
+                    <label for="bolum">Bölüm:</label>
+                    <select name="bolum" id="bolum">
+                        <option value="">Tümü</option>
+                        {% for bolum in bolumler %}
+                        <option value="{{ bolum.id }}" {% if selected_bolum == bolum.id %}selected{% endif %}>
+                            {{ bolum.bolum_adi }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ders">Ders:</label>
+                    <select name="ders" id="ders">
+                        <option value="">Tümü</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="hafta">Hafta:</label>
+                    <select name="hafta" id="hafta">
+                        <option value="">Tümü</option>
+                        {% for i in range(1, 15) %}
+                        <option value="{{ i }}" {% if selected_hafta == i %}selected{% endif %}>
+                            {{ i }}. Hafta
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <button type="submit">Filtrele</button>
+            </form>
+        </div>
+        
+        <div class="records-container">
+            {% if kayitlar %}
+            <table class="records-table">
+                <thead>
+                    <tr>
+                        <th>Ad Soyad</th>
+                        <th>Öğrenci No</th>
+                        <th>Bölüm</th>
+                        <th>Ders</th>
+                        <th>Hafta</th>
+                        <th>Tarih</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for kayit in kayitlar %}
+                    <tr>
+                        <td>{{ kayit.ad }} {{ kayit.soyad }}</td>
+                        <td>{{ kayit.ogrenci_no }}</td>
+                        <td>{{ kayit.bolum_adi }}</td>
+                        <td>{{ kayit.ders_adi }}</td>
+                        <td>{{ kayit.hafta_no }}. Hafta</td>
+                        <td>{{ kayit.kayit_tarihi_str }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                {% if current_page > 1 %}
+                <a href="{{ url_for('list_kayitlar', page=current_page-1, bolum=selected_bolum, ders=selected_ders, hafta=selected_hafta) }}" class="page-link">&laquo; Önceki</a>
+                {% endif %}
+                
+                {% for page in range(1, total_pages + 1) %}
+                <a href="{{ url_for('list_kayitlar', page=page, bolum=selected_bolum, ders=selected_ders, hafta=selected_hafta) }}" 
+                   class="page-link {% if page == current_page %}active{% endif %}">
+                    {{ page }}
+                </a>
+                {% endfor %}
+                
+                {% if current_page < total_pages %}
+                <a href="{{ url_for('list_kayitlar', page=current_page+1, bolum=selected_bolum, ders=selected_ders, hafta=selected_hafta) }}" class="page-link">Sonraki &raquo;</a>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="no-data">
+                Kayıt bulunamadı.
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="footer">
+            <a href="{{ url_for('home') }}" class="back-button">Ana Sayfaya Dön</a>
+        </div>
+    </div>
+    
+    <script>
+        const selectedDersId = {{ selected_ders|default('null', true) }};
+        
+        // Bölüm seçildiğinde dersleri getir
+        document.getElementById('bolum').addEventListener('change', function() {
+            const bolumId = this.value;
+            const dersSelect = document.getElementById('ders');
+            
+            // Ders seçimini sıfırla
+            dersSelect.innerHTML = '<option value="">Tümü</option>';
+            
+            if (bolumId) {
+                fetch(`/get-dersler/${bolumId}`)
+                    .then(response => response.json())
+                    .then(dersler => {
+                        dersler.forEach(ders => {
+                            const option = document.createElement('option');
+                            option.value = ders.id;
+                            option.textContent = ders.ders_adi;
+                            if (selectedDersId && ders.id === selectedDersId) {
+                                option.selected = true;
+                            }
+                            dersSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Dersler yüklenirken hata:', error));
+            }
+        });
+        
+        // Sayfa yüklendiğinde seçili bölüm varsa dersleri getir
+        if (document.getElementById('bolum').value) {
+            document.getElementById('bolum').dispatchEvent(new Event('change'));
+        }
+    </script>
+</body>
+</html> 

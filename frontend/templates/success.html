@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Başarılı</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Başarılı!</h1>
+        
+        <div class="success-container">
+            <div class="success-icon">✓</div>
+            <div class="success-message">
+                <h2>Yoklamanız başarıyla kaydedildi</h2>
+                <p>{{ message }}</p>
+            </div>
+            
+            <div class="details">
+                <p><strong>Ad:</strong> {{ name }}</p>
+                <p><strong>Soyad:</strong> {{ surname }}</p>
+                <p><strong>Öğrenci No:</strong> {{ student_id }}</p>
+                <p><strong>Ders:</strong> {{ ders_adi }}</p>
+                <p><strong>Hafta:</strong> {{ hafta_no }}. Hafta</p>
+                <p><strong>Tarih:</strong> {{ tarih }}</p>
+            </div>
+            
+            <a href="/" class="back-button">Ana Sayfaya Dön</a>
+        </div>
+    </div>
+</body>
+</html> 

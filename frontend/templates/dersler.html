@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ bolum.bolum_adi }} - Dersler</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ bolum.bolum_adi }} - Dersler</h1>
+            <a href="{{ url_for('ders_ekle', bolum_id=bolum.id) }}" class="add-button">Yeni Ders Ekle</a>
+        </div>
+
+        {% if error %}
+        <div class="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="list-container">
+            {% if dersler %}
+                {% for ders in dersler %}
+                <div class="list-item">
+                    <div class="item-info">
+                        <h3>{{ ders.ders_adi }}</h3>
+                        <p>Hafta Sayısı: {{ ders.hafta_sayisi }}</p>
+                    </div>
+                    <div class="item-actions">
+                        <a href="{{ url_for('qr_generator') }}?ders_id={{ ders.id }}" class="action-button">QR Kod Oluştur</a>
+                        <a href="{{ url_for('list_kayitlar') }}?ders={{ ders.id }}" class="action-button">Kayıtları Görüntüle</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-data">
+                    Bu bölümde henüz ders bulunmamaktadır.
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="footer">
+            <a href="{{ url_for('list_bolumler') }}" class="back-button">Bölümlere Dön</a>
+        </div>
+    </div>
+</body>
+</html> 
