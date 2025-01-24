@@ -389,7 +389,7 @@ def submit_form():
         # QR kodun geçerliliğini kontrol et
         current_time = int(datetime.now().timestamp())
         qr_olusturma_zamani = int(olusturma_zamani)
-        if current_time - qr_olusturma_zamani > 15:  # 15 saniye geçerlilik süresi
+        if current_time - qr_olusturma_zamani > 60:  # 60 saniye geçerlilik süresi
             return render_template('error.html', error="QR kod süresi dolmuş. Lütfen yeni bir QR kod okutun.")
         
         conn = get_db_connection()
