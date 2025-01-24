@@ -2,10 +2,12 @@ import os
 
 # MySQL bağlantı bilgileri
 db_config = {
-    'host': os.getenv('DB_HOST', 'localhost'),
-    'user': os.getenv('DB_USER', 'root'),
-    'password': os.getenv('DB_PASSWORD', ''),
-    'database': os.getenv('DB_NAME', 'ders_otomata')
+    'host': os.getenv('DB_HOST', 'bl7gipo0tvedawt6ko8o-mysql.services.clever-cloud.com'),
+    'user': os.getenv('DB_USER', 'urvls9oozleh8bgn'),
+    'password': os.getenv('DB_PASSWORD', 'QUpVyAiGK2KpgTIe6G2r'),
+    'database': os.getenv('DB_NAME', 'bl7gipo0tvedawt6ko8o'),
+    'port': 3306,
+    'connect_timeout': 30
 }
 
 # Flask uygulama ayarları

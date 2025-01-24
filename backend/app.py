@@ -277,7 +277,7 @@ def generate():
                 VALUES (%s, %s, %s)
             """, (ders_id, hafta_no, datetime.now()))
             conn.commit()
-        
+            
         base_url = request.host_url.rstrip('/')
         qr_code, timestamp, _ = generate_qr_code(base_url, ders_id, hafta_no)
         
@@ -301,7 +301,7 @@ def generate():
                              hafta_no=hafta_no,
                              tarih=datetime.now().strftime('%d.%m.%Y %H:%M'),
                              bolumler=bolumler)
-        
+                             
     except Exception as err:
         return render_template('error.html', error=str(err))
 
