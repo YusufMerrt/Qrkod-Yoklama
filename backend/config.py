@@ -2,11 +2,11 @@ import os
 
 # MySQL bağlantı bilgileri
 db_config = {
-    'host': os.getenv('DB_HOST', 'bl7gipo0tvedawt6ko8o-mysql.services.clever-cloud.com'),
-    'user': os.getenv('DB_USER', 'urvls9oozleh8bgn'),
-    'password': os.getenv('DB_PASSWORD', 'QUpVyAiGK2KpgTIe6G2r'),
-    'database': os.getenv('DB_NAME', 'bl7gipo0tvedawt6ko8o'),
-    'port': 3306,
+    'host': os.getenv('MYSQL_ADDON_HOST'),
+    'user': os.getenv('MYSQL_ADDON_USER'),
+    'password': os.getenv('MYSQL_ADDON_PASSWORD'),
+    'database': os.getenv('MYSQL_ADDON_DB'),
+    'port': int(os.getenv('MYSQL_ADDON_PORT', 3306)),
     'connect_timeout': 30
 }
 
