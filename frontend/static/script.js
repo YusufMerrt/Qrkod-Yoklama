@@ -17,8 +17,8 @@ function updateCountdown(seconds) {
         setTimeout(() => updateCountdown(seconds - 1), 1000);
     } else {
         updateQRCode();
-        updateCountdown(15);
+        updateCountdown(60);
     }
 }
 
-updateCountdown(15); 
+updateCountdown(60); 

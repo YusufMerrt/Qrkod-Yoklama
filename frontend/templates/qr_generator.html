@@ -49,7 +49,7 @@
             <div class="qr-code">
                 <img id="qr-image" src="data:image/png;base64,{{ qr_code }}" alt="QR Kod">
                 <div class="countdown-container">
-                    <p>QR kod <span id="countdown">15</span> saniye sonra yenilenecek</p>
+                    <p>QR kod <span id="countdown">60</span> saniye sonra yenilenecek</p>
                 </div>
             </div>
         </div>
@@ -97,14 +97,28 @@
         }
 
         function updateQRCode() {
-            fetch(window.location.href)
-                .then(response => response.text())
-                .then(html => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    const newQRCode = doc.querySelector('#qr-image').src;
-                    document.querySelector('#qr-image').src = newQRCode;
-                });
+            const currentUrl = window.location.href;
+            const baseUrl = currentUrl.split('?')[0];  // URL'den parametreleri temizle
+            const searchParams = new URLSearchParams(window.location.search);
+            
+            // Eğer URL'de ders_id ve hafta_no parametreleri varsa, bunları kullan
+            if (searchParams.has('ders_id') && searchParams.has('hafta_no')) {
+                const ders_id = searchParams.get('ders_id');
+                const hafta_no = searchParams.get('hafta_no');
+                
+                // Yeni timestamp ekleyerek cache'i önle
+                const timestamp = new Date().getTime();
+                const url = `${baseUrl}?ders_id=${ders_id}&hafta_no=${hafta_no}&t=${timestamp}`;
+                
+                fetch(url)
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const newQRCode = doc.querySelector('#qr-image').src;
+                        document.querySelector('#qr-image').src = newQRCode;
+                    });
+            }
         }
 
         function updateCountdown(seconds) {
@@ -115,14 +129,24 @@
                 setTimeout(() => updateCountdown(seconds - 1), 1000);
             } else {
                 updateQRCode();
-                updateCountdown(15);
+                updateCountdown(60);
             }
         }
 
         // QR kod varsa geri sayımı başlat
         const qrImage = document.getElementById('qr-image');
         if (qrImage) {
-            updateCountdown(15);
+            // URL'den ders_id ve hafta_no parametrelerini al
+            const searchParams = new URLSearchParams(window.location.search);
+            if (!searchParams.has('ders_id') || !searchParams.has('hafta_no')) {
+                // Form submit edildiğinde URL'e parametreleri ekle
+                const currentUrl = new URL(window.location.href);
+                const formData = new FormData(document.querySelector('form'));
+                currentUrl.searchParams.set('ders_id', formData.get('ders'));
+                currentUrl.searchParams.set('hafta_no', formData.get('hafta'));
+                window.history.replaceState({}, '', currentUrl);
+            }
+            updateCountdown(60);
         }
     </script>
 </body>

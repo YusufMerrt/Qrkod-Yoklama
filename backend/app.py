@@ -242,9 +242,11 @@ def generate():
         cursor = conn.cursor(dictionary=True)
         
         if request.method == 'POST':
-            bolum_id = request.form.get('bolum')
             ders_id = request.form.get('ders')
             hafta_no = request.form.get('hafta')
+            # POST isteği geldiğinde, QR kod oluşturduktan sonra GET parametreleriyle yönlendir
+            if ders_id and hafta_no:
+                return redirect(url_for('generate', ders_id=ders_id, hafta_no=hafta_no))
         else:
             ders_id = request.args.get('ders_id')
             hafta_no = request.args.get('hafta_no')
